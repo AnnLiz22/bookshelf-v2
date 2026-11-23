@@ -1,6 +1,8 @@
 package com.anna.bookshelf.controller;
 
+import com.anna.bookshelf.dto.BookRequest;
 import com.anna.bookshelf.model.Book;
+import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.BookService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -42,8 +44,8 @@ public class BookController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Book addBook(@RequestBody Book book){
-    return bookService.addBook(book, book.getAuthor().getId());
+  public Book addBook(@RequestBody BookRequest bookRequest){
+    return bookService.addBook(bookRequest);
   }
 
   @PutMapping("/{id}")
