@@ -1,5 +1,6 @@
 package com.anna.bookshelf.service;
 
+import com.anna.bookshelf.dto.BookRequest;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.repository.AuthorRepository;
@@ -33,16 +34,26 @@ public class BookService {
     }
     bookRepository.deleteById(id);
   }
-  public Book addBook(Book book, Long authorId){
-    if (bookRepository.existsByIsbn(book.getIsbn())) {
+  public Book addBook(BookRequest request){
+
+    if (bookRepository.existsByIsbn(request.getIsbn())) {
       throw new IllegalArgumentException(
-          "Book with ISBN: " + book.getIsbn() + " already exists."
+          "Book with ISBN: " + request.getIsbn() + " already exists."
       );
     }
-    Author author = authorRepository.findById(authorId).orElseThrow();
-    book.setAuthor(author);
+    Author author = authorRepository.findById(request.getAuthorId()).orElseThrow();
+
+    Book book = new Book(
+        request.getTitle(),
+        author,
+        request.getGenre(),
+        request.getYear(),
+        request.getIsbn()
+    );
    return bookRepository.save(book);
   }
+
+
 
   public Book updateBook(Long id, Book updatedBook){
     Book existingBook =
