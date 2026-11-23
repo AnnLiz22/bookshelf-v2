@@ -1,5 +1,6 @@
 package com.anna.bookshelf.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,9 +24,10 @@ public class Author {
   private String name;
 
   @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+  @JsonIgnore
   private List<Book> books = new ArrayList<>();
 
-  public Author() {
+  protected Author() {
   }
 
   public Author(String name) {
@@ -41,7 +43,7 @@ public class Author {
   }
 
   public void setName(String name) {
-    if(name == null || name.isBlank() || name.length() < 2){
+    if (name == null || name.isBlank() || name.length() < 2) {
       throw new IllegalArgumentException("Author name must contain at least 2 characters.");
     }
     this.name = name;
