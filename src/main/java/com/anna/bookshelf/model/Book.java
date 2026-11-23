@@ -41,7 +41,7 @@ public class Book {
   private String isbn;
 
 
-  public Book() {
+  protected Book() {
     this.readingStatus = ReadingStatus.WANT_TO_READ;
   }
 
@@ -76,8 +76,8 @@ public class Book {
 
   public void setAuthor(Author author) {
 
-    if(author.getName() == null || author.getName().isBlank() || author.getName().length() < 2){
-      throw new IllegalArgumentException("Author name must be set.");
+    if(author == null){
+      throw new IllegalArgumentException("Author is required.");
     }
     this.author = author;
   }
