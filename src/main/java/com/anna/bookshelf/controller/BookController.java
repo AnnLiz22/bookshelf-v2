@@ -1,6 +1,7 @@
 package com.anna.bookshelf.controller;
 
 import com.anna.bookshelf.dto.BookRequest;
+import com.anna.bookshelf.dto.BookResponse;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.BookService;
@@ -27,12 +28,12 @@ public class BookController {
   }
 
   @GetMapping
-  public List<Book> getAllBooks(){
+  public List<BookResponse> getAllBooks(){
     return bookService.getAllBooks();
   }
 
   @GetMapping("/{id}")
-  public Book getBookById(@PathVariable Long id){
+  public BookResponse getBookById(@PathVariable Long id){
    return bookService.getBookById(id);
   }
 
@@ -49,7 +50,7 @@ public class BookController {
   }
 
   @PutMapping("/{id}")
-  public Book updateBook(@PathVariable Long id, @RequestBody Book book){
-    return bookService.updateBook(id, book);
+  public Book updateBook(@PathVariable Long id, @RequestBody BookRequest bookRequest){
+    return bookService.updateBook(id, bookRequest);
   }
 }
