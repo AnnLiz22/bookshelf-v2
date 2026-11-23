@@ -43,7 +43,7 @@ public class BookController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Book addBook(@RequestBody Book book){
-    return bookService.addBook(book);
+    return bookService.addBook(book, book.getAuthor().getId());
   }
 
   @PutMapping("/{id}")

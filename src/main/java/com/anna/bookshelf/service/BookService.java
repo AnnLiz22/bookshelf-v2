@@ -1,6 +1,8 @@
 package com.anna.bookshelf.service;
 
+import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.model.Book;
+import com.anna.bookshelf.repository.AuthorRepository;
 import com.anna.bookshelf.repository.BookRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class BookService {
 
   private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
 
-  public BookService(BookRepository bookRepository) {
+  public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
     this.bookRepository = bookRepository;
+    this.authorRepository = authorRepository;
   }
 
   public List<Book> getAllBooks(){
@@ -29,12 +33,14 @@ public class BookService {
     }
     bookRepository.deleteById(id);
   }
-  public Book addBook(Book book){
+  public Book addBook(Book book, Long authorId){
     if (bookRepository.existsByIsbn(book.getIsbn())) {
       throw new IllegalArgumentException(
           "Book with ISBN: " + book.getIsbn() + " already exists."
       );
     }
+    Author author = authorRepository.findById(authorId).orElseThrow();
+    book.setAuthor(author);
    return bookRepository.save(book);
   }
 
