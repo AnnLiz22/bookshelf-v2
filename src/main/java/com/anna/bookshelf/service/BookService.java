@@ -1,6 +1,7 @@
 package com.anna.bookshelf.service;
 
 import com.anna.bookshelf.dto.BookRequest;
+import com.anna.bookshelf.dto.BookResponse;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.repository.AuthorRepository;
@@ -19,15 +20,17 @@ public class BookService {
     this.authorRepository = authorRepository;
   }
 
-  public List<Book> getAllBooks(){
-    return bookRepository.findAll();
+  public List<BookResponse> getAllBooks(){
+    List<Book> books = bookRepository.findAll();
+    return books.stream().map(BookResponse::new).toList();
   }
 
-  public Book getBookById(Long id) {
-    return bookRepository.findById(id)
+  public BookResponse getBookById(Long id) {
+    Book book = bookRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Book with id: " + id + " not found"));
-
+    return new BookResponse(book);
   }
+
   public void deleteBook(Long id){
     if (!bookRepository.existsById(id)) {
       throw new RuntimeException("Book with id: " + id + " not found");
@@ -55,17 +58,20 @@ public class BookService {
 
 
 
-  public Book updateBook(Long id, Book updatedBook){
+  public Book updateBook(Long id, BookRequest bookRequest){
     Book existingBook =
         bookRepository
             .findById(id)
             .orElseThrow(()->new RuntimeException("Book doesn't exist"));
 
-    existingBook.setTitle(updatedBook.getTitle());
-    existingBook.setAuthor(updatedBook.getAuthor());
-    existingBook.setGenre(updatedBook.getGenre());
-    existingBook.setYear(updatedBook.getYear());
-    existingBook.setIsbn(updatedBook.getIsbn());
+    Author author = authorRepository.findById(bookRequest.getAuthorId())
+        .orElseThrow(()->new RuntimeException("Author not found."));
+
+    existingBook.setTitle(bookRequest.getTitle());
+    existingBook.setAuthor(author);
+    existingBook.setGenre(bookRequest.getGenre());
+    existingBook.setYear(bookRequest.getYear());
+    existingBook.setIsbn(bookRequest.getIsbn());
 
    return bookRepository.save(existingBook);
   }
