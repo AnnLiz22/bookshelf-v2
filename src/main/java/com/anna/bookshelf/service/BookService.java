@@ -2,6 +2,8 @@ package com.anna.bookshelf.service;
 
 import com.anna.bookshelf.dto.BookRequest;
 import com.anna.bookshelf.dto.BookResponse;
+import com.anna.bookshelf.exception.DuplicateResourceException;
+import com.anna.bookshelf.exception.ResourceNotFoundException;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.repository.AuthorRepository;
@@ -27,24 +29,20 @@ public class BookService {
 
   public BookResponse getBookById(Long id) {
     Book book = bookRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Book with id: " + id + " not found"));
+        .orElseThrow(()
+            -> new ResourceNotFoundException("Book with id: " + id + " not found"));
     return new BookResponse(book);
   }
 
-  public void deleteBook(Long id){
-    if (!bookRepository.existsById(id)) {
-      throw new RuntimeException("Book with id: " + id + " not found");
-    }
-    bookRepository.deleteById(id);
-  }
   public Book addBook(BookRequest request){
 
     if (bookRepository.existsByIsbn(request.getIsbn())) {
-      throw new IllegalArgumentException(
+      throw new DuplicateResourceException(
           "Book with ISBN: " + request.getIsbn() + " already exists."
       );
     }
-    Author author = authorRepository.findById(request.getAuthorId()).orElseThrow();
+    Author author = authorRepository.findById(request.getAuthorId())
+        .orElseThrow(() -> new ResourceNotFoundException("Author not found."));
 
     Book book = new Book(
         request.getTitle(),
@@ -56,16 +54,16 @@ public class BookService {
    return bookRepository.save(book);
   }
 
-
-
   public Book updateBook(Long id, BookRequest bookRequest){
     Book existingBook =
         bookRepository
             .findById(id)
-            .orElseThrow(()->new RuntimeException("Book doesn't exist"));
+            .orElseThrow(()
+                -> new ResourceNotFoundException("Book with id: " +id+ " doesn't exist."));
 
     Author author = authorRepository.findById(bookRequest.getAuthorId())
-        .orElseThrow(()->new RuntimeException("Author not found."));
+        .orElseThrow(()
+            -> new ResourceNotFoundException("Author not found."));
 
     existingBook.setTitle(bookRequest.getTitle());
     existingBook.setAuthor(author);
@@ -76,4 +74,10 @@ public class BookService {
    return bookRepository.save(existingBook);
   }
 
+  public void deleteBook(Long id){
+    if (!bookRepository.existsById(id)) {
+      throw new ResourceNotFoundException("Book with id: " + id + " not found.");
+    }
+    bookRepository.deleteById(id);
+  }
 }
