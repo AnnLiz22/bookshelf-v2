@@ -1,5 +1,7 @@
 package com.anna.bookshelf.service;
 
+import com.anna.bookshelf.exception.DuplicateResourceException;
+import com.anna.bookshelf.exception.ResourceNotFoundException;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class AuthorService {
 
  public Author addAuthor(Author author){
     if(authorRepository.existsByName(author.getName())){
-      throw new IllegalArgumentException("Author " + author.getName() +" already exists.");
+      throw new DuplicateResourceException("Author " + author.getName() +" already exists.");
     }
    return authorRepository.save(author);
  }
@@ -27,13 +29,14 @@ public class AuthorService {
 
  public Author findAuthor(Long id){
    return authorRepository.findById(id).orElseThrow(()
-       -> new RuntimeException("Author with the id " + id + " not found."));
+       -> new ResourceNotFoundException("Author with the id " + id + " not found."));
  }
 
   public Author updateAuthor(Long id, Author updatedAuthor) {
    Author existingAuthor = authorRepository.findById(id)
-       .orElseThrow(() -> new RuntimeException("Author not found."));
+       .orElseThrow(() -> new ResourceNotFoundException("Author with id: "+id +" not found."));
     existingAuthor.setName(updatedAuthor.getName());
+
     return authorRepository.save(existingAuthor);
   }
 
