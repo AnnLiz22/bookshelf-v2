@@ -37,7 +37,7 @@ public class Book {
 
   private int year;
 
-  @Column(unique = true, length = 13)
+  @Column(unique = true)
   private String isbn;
 
 
@@ -106,9 +106,6 @@ public class Book {
   }
 
   public void setIsbn(String isbn) {
-    if(!(isbn.length() == 10 || isbn.length() == 13)){
-      throw new IllegalArgumentException("Isbn is incorrect. You can add it later.");
-    }
     this.isbn = isbn;
   }
 

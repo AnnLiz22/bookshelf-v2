@@ -1,13 +1,27 @@
 package com.anna.bookshelf.dto;
 
 import com.anna.bookshelf.model.Genre;
+import com.anna.bookshelf.validation.ValidIsbn;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class BookRequest {
-
+  @NotBlank(message = "Title is required")
   private String title;
+
+  @NotNull
+  @Positive
   private Long authorId;
+
   private Genre genre;
+
+  @Positive
   private int year;
+
+  @NotBlank
+  @NotNull
+  @ValidIsbn
   private String isbn;
 
   public BookRequest() {
