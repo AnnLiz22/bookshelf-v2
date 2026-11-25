@@ -5,6 +5,7 @@ import com.anna.bookshelf.dto.BookResponse;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.BookService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,12 +46,12 @@ public class BookController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Book addBook(@RequestBody BookRequest bookRequest){
+  public Book addBook(@Valid @RequestBody BookRequest bookRequest){
     return bookService.addBook(bookRequest);
   }
 
   @PutMapping("/{id}")
-  public Book updateBook(@PathVariable Long id, @RequestBody BookRequest bookRequest){
+  public Book updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest bookRequest){
     return bookService.updateBook(id, bookRequest);
   }
 }
