@@ -1,7 +1,10 @@
 package com.anna.bookshelf.controller;
 
+import com.anna.bookshelf.dto.AuthorRequest;
+import com.anna.bookshelf.dto.AuthorResponse;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.AuthorService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,23 +29,23 @@ public class AuthorController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Author addAuthor(@RequestBody Author author){
+  public AuthorResponse addAuthor(@Valid @RequestBody AuthorRequest author){
   return  authorService.addAuthor(author);
   }
 
   @GetMapping
-  public List<Author> getAuthors(){
+  public List<AuthorResponse> getAuthors(){
     return authorService.getAllAuthors();
   }
 
   @GetMapping("/{id}")
-  public Author getAuthor(@PathVariable Long id){
+  public AuthorResponse getAuthor(@PathVariable Long id){
     return authorService.findAuthor(id);
   }
 
   @PutMapping("/{id}")
-  public Author updateAuthor(@PathVariable Long id, @RequestBody Author author){
-    return authorService.updateAuthor(id, author);
+  public AuthorResponse updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorRequest authorRequest){
+    return authorService.updateAuthor(id, authorRequest);
   }
 
   @DeleteMapping("/{id}")
