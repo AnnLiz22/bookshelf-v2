@@ -8,8 +8,9 @@ import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.model.Book;
 import com.anna.bookshelf.repository.AuthorRepository;
 import com.anna.bookshelf.repository.BookRepository;
-import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class BookService {
@@ -22,9 +23,9 @@ public class BookService {
     this.authorRepository = authorRepository;
   }
 
-  public List<BookResponse> getAllBooks(){
-    List<Book> books = bookRepository.findAll();
-    return books.stream().map(BookResponse::new).toList();
+  public Page<BookResponse> getAllBooks(Pageable pageable){
+   return bookRepository.findAll(pageable).map(BookResponse::new);
+
   }
 
   public BookResponse getBookById(Long id) {

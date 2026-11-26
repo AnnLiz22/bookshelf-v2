@@ -2,11 +2,10 @@ package com.anna.bookshelf.controller;
 
 import com.anna.bookshelf.dto.BookRequest;
 import com.anna.bookshelf.dto.BookResponse;
-import com.anna.bookshelf.model.Book;
-import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.BookService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +28,8 @@ public class BookController {
   }
 
   @GetMapping
-  public List<BookResponse> getAllBooks(){
-    return bookService.getAllBooks();
+  public Page<BookResponse> getAllBooks(Pageable pageable){
+    return bookService.getAllBooks(pageable);
   }
 
   @GetMapping("/{id}")

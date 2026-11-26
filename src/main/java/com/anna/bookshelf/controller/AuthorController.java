@@ -6,6 +6,8 @@ import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.service.AuthorService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +36,8 @@ public class AuthorController {
   }
 
   @GetMapping
-  public List<AuthorResponse> getAuthors(){
-    return authorService.getAllAuthors();
+  public Page<AuthorResponse> getAuthors(Pageable pageable){
+    return authorService.getAllAuthors(pageable);
   }
 
   @GetMapping("/{id}")

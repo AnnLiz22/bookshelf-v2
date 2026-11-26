@@ -6,6 +6,8 @@ import com.anna.bookshelf.exception.DuplicateResourceException;
 import com.anna.bookshelf.exception.ResourceNotFoundException;
 import com.anna.bookshelf.model.Author;
 import com.anna.bookshelf.repository.AuthorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -27,9 +29,8 @@ public class AuthorService {
    return new AuthorResponse(author);
  }
 
- public List <AuthorResponse> getAllAuthors(){
-    List <Author> authors = authorRepository.findAll();
-    return authors.stream().map(AuthorResponse::new).toList();
+ public Page<AuthorResponse> getAllAuthors(Pageable pageable){
+    return authorRepository.findAll(pageable).map(AuthorResponse::new);
  }
 
  public AuthorResponse findAuthor(Long id){
