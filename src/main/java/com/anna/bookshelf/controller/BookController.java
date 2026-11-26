@@ -38,20 +38,21 @@ public class BookController {
    return bookService.getBookById(id);
   }
 
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public BookResponse addBook(@Valid @RequestBody BookRequest bookRequest){
+    return bookService.addBook(bookRequest);
+  }
+
+  @PutMapping("/{id}")
+  public BookResponse updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest bookRequest){
+    return bookService.updateBook(id, bookRequest);
+  }
+
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteBookById(@PathVariable Long id){
     bookService.deleteBook(id);
   }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public Book addBook(@Valid @RequestBody BookRequest bookRequest){
-    return bookService.addBook(bookRequest);
-  }
-
-  @PutMapping("/{id}")
-  public Book updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest bookRequest){
-    return bookService.updateBook(id, bookRequest);
-  }
 }

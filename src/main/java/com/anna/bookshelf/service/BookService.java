@@ -34,7 +34,7 @@ public class BookService {
     return new BookResponse(book);
   }
 
-  public Book addBook(BookRequest request){
+  public BookResponse addBook(BookRequest request){
 
     if (bookRepository.existsByIsbn(request.getIsbn())) {
       throw new DuplicateResourceException(
@@ -51,10 +51,11 @@ public class BookService {
         request.getYear(),
         request.getIsbn()
     );
-   return bookRepository.save(book);
+    bookRepository.save(book);
+   return new BookResponse(book);
   }
 
-  public Book updateBook(Long id, BookRequest bookRequest){
+  public BookResponse updateBook(Long id, BookRequest bookRequest){
     Book existingBook =
         bookRepository
             .findById(id)
@@ -71,7 +72,9 @@ public class BookService {
     existingBook.setYear(bookRequest.getYear());
     existingBook.setIsbn(bookRequest.getIsbn());
 
-   return bookRepository.save(existingBook);
+    bookRepository.save(existingBook);
+
+    return new BookResponse(existingBook);
   }
 
   public void deleteBook(Long id){
