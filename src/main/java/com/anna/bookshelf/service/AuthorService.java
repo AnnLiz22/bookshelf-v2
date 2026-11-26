@@ -1,5 +1,7 @@
 package com.anna.bookshelf.service;
 
+import com.anna.bookshelf.dto.AuthorRequest;
+import com.anna.bookshelf.dto.AuthorResponse;
 import com.anna.bookshelf.exception.DuplicateResourceException;
 import com.anna.bookshelf.exception.ResourceNotFoundException;
 import com.anna.bookshelf.model.Author;
@@ -16,32 +18,38 @@ public class AuthorService {
     this.authorRepository = authorRepository;
   }
 
- public Author addAuthor(Author author){
-    if(authorRepository.existsByName(author.getName())){
-      throw new DuplicateResourceException("Author " + author.getName() +" already exists.");
+ public AuthorResponse addAuthor(AuthorRequest authorRequest){
+    if(authorRepository.existsByName(authorRequest.getName())){
+      throw new DuplicateResourceException("Author " + authorRequest.getName() +" already exists.");
     }
-   return authorRepository.save(author);
+    Author author = new Author(authorRequest.getName());
+    authorRepository.save(author);
+   return new AuthorResponse(author);
  }
 
- public List <Author> getAllAuthors(){
-    return authorRepository.findAll();
+ public List <AuthorResponse> getAllAuthors(){
+    List <Author> authors = authorRepository.findAll();
+    return authors.stream().map(AuthorResponse::new).toList();
  }
 
- public Author findAuthor(Long id){
-   return authorRepository.findById(id).orElseThrow(()
+ public AuthorResponse findAuthor(Long id){
+   Author author = authorRepository.findById(id).orElseThrow(()
        -> new ResourceNotFoundException("Author with the id " + id + " not found."));
+   return new AuthorResponse(author);
  }
 
-  public Author updateAuthor(Long id, Author updatedAuthor) {
+  public AuthorResponse updateAuthor(Long id, AuthorRequest authorRequest) {
    Author existingAuthor = authorRepository.findById(id)
        .orElseThrow(() -> new ResourceNotFoundException("Author with id: "+id +" not found."));
-    existingAuthor.setName(updatedAuthor.getName());
-
-    return authorRepository.save(existingAuthor);
+    existingAuthor.setName(authorRequest.getName());
+     authorRepository.save(existingAuthor);
+    return new AuthorResponse(existingAuthor);
   }
 
   public void deleteAuthor(Long id){
-    Author author = findAuthor(id);
-    authorRepository.delete(author);
+    if(!authorRepository.existsById(id)){
+      throw new ResourceNotFoundException("Author with id: " + id +" not found.");
+    };
+    authorRepository.deleteById(id);
   }
 }
