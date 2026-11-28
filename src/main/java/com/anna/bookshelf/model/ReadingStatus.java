@@ -1,6 +1,7 @@
 package com.anna.bookshelf.model;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Arrays;
 
 public enum ReadingStatus {
@@ -30,5 +31,13 @@ public enum ReadingStatus {
     Arrays.stream(ReadingStatus.values())
         .forEach(r -> System.out.println(r.getNumber()
             + ". " + r.getDescription()));
+  }
+
+  @JsonCreator
+  public static ReadingStatus fromString(String value) {
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    return ReadingStatus.valueOf(value.trim().replace(" ", "_").toUpperCase());
   }
 }

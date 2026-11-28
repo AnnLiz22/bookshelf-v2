@@ -1,5 +1,6 @@
 package com.anna.bookshelf.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Arrays;
 
 public enum Genre {
@@ -32,5 +33,13 @@ public enum Genre {
     Arrays.stream(Genre.values())
         .forEach(genre ->
             System.out.println(genre.getNumber() + ". " + genre.getDescription()));
+  }
+
+  @JsonCreator
+  public static Genre fromString(String value) {
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    return Genre.valueOf(value.trim().toUpperCase());
   }
 }
